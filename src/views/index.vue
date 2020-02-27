@@ -23,7 +23,6 @@ export default {
     this.$api.basic.test().then(res => {
       console.log(res);
     });
-
   }
 };
 </script>
