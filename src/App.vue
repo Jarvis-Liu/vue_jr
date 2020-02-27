@@ -1,32 +1,58 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div id="app">
+        <transition name="fade">
+            <router-view class="routerView"></router-view>
+        </transition>
     </div>
-    <router-view/>
-  </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import jwt_decode from "jwt-decode";
+export default {
+    name: "app",
+    created() {
+        if (localStorage.eleToken) {
+            //解析token
+            const decoded = jwt_decode(localStorage.eleToken);
+            //存储至vuex
+            this.$store.dispatch(
+                "setAuthenticated",
+                !this.$tools.isEmpty(decoded)
+            );
+            this.$store.dispatch("setUser", decoded);
+        }
+    },
+    // data() {
+    //     return {
+    //         transitionName: "slide-right" // 默认动态路由变化为slide-right
+    //     };
+    // },
+    // watch: {
+    //     $route() {
+    //         let isBack = this.$router.isBack;
+    //         console.log(isBack);
+
+    //         if (isBack) {
+    //             this.transitionName = "slide-right";
+    //         } else {
+    //             this.transitionName = "slide-left";
+    //         }
+    //         this.$router.isBack = false;
+    //     }
+    // }
+};
+</script>
+<style lang="stylus">
+html, body, #app {
+    width: 100%;
+    height: 100%;
 }
 
-#nav {
-  padding: 30px;
+.fade-enter-active, .fade-leave-avtive {
+    transition: opacity 0.8s;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }
 </style>
